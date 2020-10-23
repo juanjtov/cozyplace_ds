@@ -13,3 +13,15 @@ def get_sections(url):
 
     return links_sections
 
+def get_top_destinations(url_attractions):
+    attractions = requests.get(url_attractions)
+    s_attract = BeautifulSoup(attractions.text, 'lxml')
+    top_destinations = s_attract.find('div', attrs={'data-track-label':'popular_destinations'}).find_all('div', attrs={'class':'poi ui_shelf_item_container ui_geo_shelf_item'})
+    links_top_attractions = []
+    for destination in top_destinations:
+        if destination.find('a'):
+            links_top_attractions.append('http://www.tripadvisor.com'+destination.find('a').get('href'))
+    
+    return links_top_attractions
+        
+
