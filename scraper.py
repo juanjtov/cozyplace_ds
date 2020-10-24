@@ -41,14 +41,15 @@ def content_info(soup):
                 dir_results['title'] = None
         
         #Extracting Activities
-        #fix it for Boston
+        
         activities = soup.find_all('span', attrs = {'class':'_2e_OvRJN'})
                 
-        if activities is not None:
+        #if activities is not None:
+        if len(activities) != 0:
             activities_list = [activitie.h3.text for activitie in activities]
             dir_results['activities'] = activities_list
         else:  
-           
+          
             activities = soup.find_all('div', attrs = {'class':'_1lY2qyk3'})
             
             if activities is not None:
@@ -56,6 +57,26 @@ def content_info(soup):
                 dir_results['activities'] = activities_list
             else:
                 dir_results['activities'] = None
+
+        
+        #Extracting Images
+        
+        images_media = soup.find_all('a', attrs={'class':'_1zqXepI-'})
+        
+        if len(images_media) != 0:
+            images = [img.find('img').get('data-url') for img in images_media]
+            dir_results['images'] = images
+        else:
+            images_media = soup.find_all('a', attrs={'class':'_1o7ZDa9J'})
+            if images_media:
+                images = [img.img.get('data-url') for img in images_media]
+                dir_results['images'] = images
+            
+            else:
+                dir_results['images'] = None
+
+        
+        
         return dir_results
         
     except Exception as e:
