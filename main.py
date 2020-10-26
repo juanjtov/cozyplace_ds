@@ -1,9 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
-from scraper import get_sections, get_top_destinations, content_info
+from scraper import get_sections, get_top_destinations, content_info, get_content, get_links_activities
 
 def run():
-    url_basic = 'https://www.tripadvisor.com/'
+    url_basic = 'http://www.tripadvisor.com/'
     sections = get_sections(url_basic)
     print(sections)
 
@@ -13,9 +13,10 @@ def run():
     for link in links_top_attractions:
         content = requests.get(link)
         if content.status_code == 200:
-            s_content = BeautifulSoup(content.text,'lxml')
-            print(content_info(s_content))
+            s_content = BeautifulSoup(content.text,'html.parser')
+            activities_content_links = get_links_activities(link, url_basic)
 
+            print(content_info(s_content, activities_content_links))
 
 
 

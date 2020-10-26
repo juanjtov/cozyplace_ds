@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 
 def get_sections(url):
     tripadv = requests.get(url)
-    s_trip = BeautifulSoup(tripadv.text, 'lxml')
+    s_trip = BeautifulSoup(tripadv.text, 'html.parser')
     sections = s_trip.find_all('div', attrs={'class':'_2R--RBNa _39kFrNls _2PEEtTWK _3_rLKjCx _3wprI9Ge _1_nbwDp3'})
 
     links_sections = []
@@ -13,9 +13,10 @@ def get_sections(url):
 
     return links_sections
 
+
 def get_top_destinations(url_attractions):
     attractions = requests.get(url_attractions)
-    s_attract = BeautifulSoup(attractions.text, 'lxml')
+    s_attract = BeautifulSoup(attractions.text, 'html.parser')
     top_destinations = s_attract.find('div', attrs={'data-track-label':'popular_destinations'}).find_all('div', attrs={'class':'poi ui_shelf_item_container ui_geo_shelf_item'})
     links_top_attractions = []
     for destination in top_destinations:
@@ -24,7 +25,35 @@ def get_top_destinations(url_attractions):
     
     return links_top_attractions
 
-def content_info(soup):
+
+def get_content(activities_list):
+    activities_overview = []
+    for activity in activities_list:
+        r_activity = requests.get(activity)
+        if r_activity.status_code == 200:
+            r_activity_soup = BeautifulSoup(r_activity.text,'html.parser')
+            activity_content =  r_activity_soup.find('div', attrs={'class':'AvpaRatK'})
+            if activity_content:
+                activities_overview.append(activity_content.find('span').text)
+            else:
+                activities_overview.append('Activity N/A')
+            
+    
+    return activities_overview
+
+
+def get_links_activities(url_city, url_basic):
+    r_url_city = requests.get(url_city)
+    if r_url_city.status_code == 200:
+        s_city =  BeautifulSoup(r_url_city.text, 'html.parser')
+        activities_class = s_city.find_all('div', attrs={'class':'_1sXmOkVY'})
+        links_activities = [(url_basic+activity.find('a').get('href')) for activity in activities_class]
+                            #.replace('https','http') for activity in activities_class]
+    
+    return links_activities
+
+
+def content_info(soup, activities_list_urls):
     dir_results = {}
     try:
         
@@ -74,6 +103,14 @@ def content_info(soup):
             
             else:
                 dir_results['images'] = None
+        
+         #Extracting Content
+        
+        content_overview = get_content(activities_list_urls)
+        if content_overview:
+            dir_results['overviews'] = content_overview
+        else:
+            dir_results['overviews'] = None
 
         
         
