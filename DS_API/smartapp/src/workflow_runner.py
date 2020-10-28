@@ -1,4 +1,4 @@
-from models import City, Activities
+from models import  Activities, Configuration, City
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -6,17 +6,21 @@ import pandas as pd
 
 #This file for the input URL get the main cities and for each city the list of activities
 
-def get_cities(country_url, url_scraping): #Input the country
+def get_cities(config, url_scraping): #Input the country
 #url_attractions = 'https://www.tripadvisor.com/Attractions'
+    country_url = config.get_url_country()
     country = requests.get(country_url)
     s_country = BeautifulSoup(country.text, 'html.parser')
+    dir_cities = {}
     top_cities = s_country.find_all('div', attrs={'class':'_3IKpjWD9'})    
     links_top_cities = []
     for city in top_cities:
         if city.find('a'):
             links_top_cities.append(url_scraping+city.find('a').get('href'))
+    
+    dir_cities[f'{config.country}'] = links_top_cities
         
-    return links_top_cities #returning the list of cities
+    return dir_cities              #returning the list of cities in a JSON format
 
 
 def get_city_activities_link(url_city, url_scraping): #input link for each city
@@ -170,23 +174,58 @@ def extract_information(results): #Input the results from the content as a list 
             show_results_per_city.append(final_results)
     
     #return show_results_per_city #return organized results
+def selec_activities(activ, stg2, stg3, stg_title):
+    dir_stg = {}
+    if stg_title:
+        dir_stg['Location'] = stg_title
+    else:
+        dir_stg['Location'] = None
+        
+    if activ:
+        dir_stg['activity_title'] = activ
+    else:
+        dir_stg['activity_title'] = None
+                
+    if stg3:    
+        dir_stg['description'] = stg3
+    else:
+        dir_stg['description'] = None
+            
+    if stg2:    
+        dir_stg['images'] = stg2
+    else:
+        dir_stg['images'] = None
+            
+    return dir_stg
+    
+        
+def organize_info(result):
+    stg_title = result['title']
+    stg1 = result['activities']
+    stg2 = result['images']
+    stg3 = result['overviews']
+    lis_activ = []
+    for j, activ in enumerate(stg1):
+        lis_activ.append(selec_activities(activ, stg2[j], stg3[j], stg_title))
+    
+    return lis_activ
+        
+
         
 #We gotta try async def....
 def run(config, url_scraping):
-    activities_per_city_links = []
-    results_per_city = []
-    url_country = config.get_url()
-    top_places = get_cities(url_country, url_scraping)
-    for link in top_places: #Top places refers to the place: Bucaramanga, Cartagena, etc.
-        content_places = requests.get(link)
-        if content_places.status_code == 200:
-            s_content_places = BeautifulSoup(content_places.text,'html.parser')
-        
-            activities_per_city_links = get_city_activities_link(link, url_scraping)
+
+    link = config.get_url_city()
+    content_places = requests.get(link)
+    if content_places.status_code == 200:
+        s_content_places = BeautifulSoup(content_places.text,'html.parser')
+        activities_per_city_links = get_city_activities_link(link, url_scraping)
+        results_per_city = content_information(s_content_places, activities_per_city_links)
+        results_dic_activities = organize_info(results_per_city)
             #  activities_per_city_ links = get_links_activities_final(link)
             #print(activities_per_city_links)
-            results_per_city.append(content_information(s_content_places, activities_per_city_links))
+            #results_per_city.append(content_information(s_content_places, activities_per_city_links))
             #results_per_activity = get_activity_info(activities_content_links)
             #extract_information(results_per_city)
     
-    return results_per_city
+    return results_dic_activities
