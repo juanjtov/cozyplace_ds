@@ -33,7 +33,7 @@ def get_result(country: str):
         raise MyException(e)
        
 @app.get("/location/{city}", response_model=Activities)
-def get_activities_per_city(city: str):
+def get_activities_per_city(city: City = Path(..., title="The name of the Ccity you want to scrap the activities")):
     url_scraping = 'http://www.tripadvisor.com'
     config = Configuration(
         city=city #I'm passing this argument from the path that the user use

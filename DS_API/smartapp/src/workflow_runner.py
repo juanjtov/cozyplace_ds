@@ -49,21 +49,30 @@ def get_city_activities_link(url_city, url_scraping): #input link for each city
 
 def get_content_per_activity(activities_list): #Input activities list
     activities_overview = []
+    activities_user = []
     for activity in activities_list:
         if activity is not None:
             r_activity = requests.get(activity)
             if r_activity.status_code == 200:
                 r_activity_soup = BeautifulSoup(r_activity.text,'html.parser')
                 activity_content =  r_activity_soup.find('div', attrs={'class':'AvpaRatK'})
+                activity_user =  r_activity_soup.find('span', attrs={'class':'_3nwb933a'})
+                
                 if activity_content:
                     activities_overview.append(activity_content.find('span').text)
                 else:
                     activities_overview.append('Activity N/A')
+
+                if activity_user:
+                    activities_user.append(activity_user.text)
+                else:
+                    activities_user.append('Activity N/A')
         else:
             activities_overview.append('Activity N/A')
+            activities_user.append('Activivity N/A')
             
     
-    return activities_overview #return overview per activity
+    return activities_overview, activities_user #return overview per activity
 
 
 def content_information(soup, activities_list_urls): #Input the Soup of the city and the list of links for each activity
@@ -120,11 +129,13 @@ def content_information(soup, activities_list_urls): #Input the Soup of the city
         #Extracting Content
         
         
-        content_overview = get_content_per_activity(activities_list_urls)
-        if content_overview:
-            dir_results['overviews'] = content_overview
+        content_per_activity = get_content_per_activity(activities_list_urls)
+        if content_per_activity:
+            dir_results['overviews'] = content_per_activity[0]
+            dir_results['users'] = content_per_activity[1]
         else:
             dir_results['overviews'] = None
+            dir_results['users'] = None
         
             
         
@@ -174,18 +185,24 @@ def extract_information(results): #Input the results from the content as a list 
             show_results_per_city.append(final_results)
     
     #return show_results_per_city #return organized results
-def selec_activities(activ, stg2, stg3, stg_title):
+def selec_activities(activ, stg2, stg3, stg4, stg_title):
     dir_stg = {}
-    if stg_title:
-        dir_stg['Location'] = stg_title
-    else:
-        dir_stg['Location'] = None
-        
+
     if activ:
-        dir_stg['activity_title'] = activ
+        dir_stg['title'] = activ
     else:
-        dir_stg['activity_title'] = None
-                
+        dir_stg['title'] = None
+    
+    if stg4:    
+        dir_stg['user'] = stg4
+    else:
+        dir_stg['user'] = None
+        
+    if stg_title:
+        dir_stg['country'] = stg_title
+    else:
+        dir_stg['country'] = None   
+                   
     if stg3:    
         dir_stg['description'] = stg3
     else:
@@ -204,9 +221,10 @@ def organize_info(result):
     stg1 = result['activities']
     stg2 = result['images']
     stg3 = result['overviews']
+    stg4 = result['users']
     lis_activ = []
     for j, activ in enumerate(stg1):
-        lis_activ.append(selec_activities(activ, stg2[j], stg3[j], stg_title))
+        lis_activ.append(selec_activities(activ, stg2[j], stg3[j], stg4[j], stg_title))
     
     return lis_activ
         

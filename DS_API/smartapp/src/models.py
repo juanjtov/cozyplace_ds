@@ -66,8 +66,8 @@ class Cities(BaseModel):
 
 class Activities(BaseModel):
     title: str
-    city : str
-    location: str
+    user : str
+    country : str
     description: str
     image: str
 
