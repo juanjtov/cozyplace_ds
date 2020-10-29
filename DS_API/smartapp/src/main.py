@@ -19,7 +19,7 @@ def read_root():
     return {"Data Science app for COZY PLACE": "Choose the country you're looking for"}
 
 @app.get("/{country}", response_model=Cities)
-def get_result(country: str):
+def get_result(country: Country = Path(..., title="The name of the country you want to scrap the best cities to explore")):
     url_scraping = 'http://www.tripadvisor.com'
     config = Configuration(
         country=country #I'm passing this argument from the path that the user use
