@@ -70,6 +70,7 @@ class Activities(BaseModel):
     duration: str
     city : str
     description: str
+    tags: str
     image: str
 
     

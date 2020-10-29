@@ -155,8 +155,15 @@ def content_information(soup, activities_list_urls): #Input the Soup of the city
             dir_results['duration'] = None
         
             
+        #Extracting tags
+        tags = soup.find_all('span',attrs={'class':'_21qUqkJx'})
+        str_x = []
+        if len(tags) != 0:
+            dir_results['tags'] = [tag.text for tag in tags]
+        else:
+            [str_x.append('general') for i in range(len( activities_list_urls))]
+            dir_results['tags'] = str_x
         
-        #print(dir_results)
       
         return dir_results #return a dictionary with all the information for each city
                                          
@@ -167,33 +174,6 @@ def content_information(soup, activities_list_urls): #Input the Soup of the city
         print('\n')
 
 
-def dic_asignment_activities(result): #Input is a Dictionary List
-    dir_per_activity = {}
-    results_dic_list = []
-    activities_list = result['activities']
-    overviews_list = result['overviews']
-    images_list = result['images']
-    dir_per_activity['Location']= result['title']
-
-    for i in range(0, len(activities_list)):
-        if activities_list[i]:
-            dir_per_activity['activity_title'] = activities_list[i]
-        else:
-            dir_per_activity['activity_title'] = None
-                
-        if overviews_list:    
-            dir_per_activity['description'] = overviews_list[i]
-        else:
-            dir_per_activity['description'] = None
-            
-        if images_list:    
-            dir_per_activity['images'] = images_list[i]
-        else:
-            dir_per_activity['images'] = None
-
-        print(dir_per_activity) #output is a dict list with json for activity
-
-    
 def extract_information(results): #Input the results from the content as a list of dicts
     show_results_per_city = []
     for result in results: #each result belongs to a dictionary of a place: Cartagena, Bogota,etc
@@ -202,7 +182,7 @@ def extract_information(results): #Input the results from the content as a list 
             show_results_per_city.append(final_results)
     
     #return show_results_per_city #return organized results
-def selec_activities(activ, stg2, stg3, stg4, stg5, stg_title):
+def selec_activities(activ, stg2, stg3, stg4, stg5, stg6, stg_title):
     dir_stg = {}
 
     if activ:
@@ -229,6 +209,11 @@ def selec_activities(activ, stg2, stg3, stg4, stg5, stg_title):
         dir_stg['description'] = stg3
     else:
         dir_stg['description'] = None
+
+    if stg6:    
+        dir_stg['tags'] = stg6
+    else:
+        dir_stg['tags'] = None
             
     if stg2:    
         dir_stg['images'] = stg2
@@ -245,9 +230,21 @@ def organize_info(result):
     stg3 = result['overviews']
     stg4 = result['users']
     stg5 = result['duration']
+    stg6 = result['tags']
+
+    if len(stg5) != len(stg1):
+        #dif_dur = len(stg5)-len(stg1)
+        #for i in range(dif_dur):
+        stg5.append('N/A')
+    
+    if len(stg6) != len(stg1):
+        #dif = len(stg6)-len(stg1)
+        #for i in range(dif):
+        stg6.append('general')
+
     lis_activ = []
     for j, activ in enumerate(stg1):
-        lis_activ.append(selec_activities(activ, stg2[j], stg3[j], stg4[j], stg5[j], stg_title))
+        lis_activ.append(selec_activities(activ, stg2[j], stg3[j], stg4[j], stg5[j], stg6[j], stg_title))
     
     return lis_activ
         
