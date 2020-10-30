@@ -69,8 +69,9 @@ class Activities(BaseModel):
     user : str
     date: str
     duration: str
-    city : str
+    location : str
     description: str
+    rating: str
     tags: str
     image: str
 

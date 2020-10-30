@@ -98,12 +98,12 @@ def content_information(soup, activities_list_urls): #Input the Soup of the city
         #Extracting title
         title = soup.find('div', attrs = {'class':'_1l9azAvU'})
         if title is not None:
-            dir_results['title'] = title.h1.text
+            dir_results['title'] = title.h1.text.replace('Things to Do in ','')
             
         else:
             title = soup.find('div', attrs={'class':'display_center ui_container'})
             if title is not None:
-                dir_results['title'] = title.h1.text
+                dir_results['title'] = title.h1.text.replace('Things to Do in ','')
             else:
                 dir_results['title'] = None
         
@@ -174,13 +174,6 @@ def content_information(soup, activities_list_urls): #Input the Soup of the city
         print('\n')
 
 
-def extract_information(results): #Input the results from the content as a list of dicts
-    show_results_per_city = []
-    for result in results: #each result belongs to a dictionary of a place: Cartagena, Bogota,etc
-        final_results = dic_asignment_activities(result)
-        if final_results:
-            show_results_per_city.append(final_results)
-    
     #return show_results_per_city #return organized results
 def selec_activities(activ, stg2, stg3, stg4, stg5, stg6, stg_title):
     dir_stg = {}
@@ -204,9 +197,9 @@ def selec_activities(activ, stg2, stg3, stg4, stg5, stg6, stg_title):
         dir_stg['duration'] = None
         
     if stg_title:
-        dir_stg['city'] = stg_title
+        dir_stg['location'] = stg_title
     else:
-        dir_stg['city'] = None   
+        dir_stg['location'] = None   
                    
     if stg3:    
         dir_stg['description'] = stg3
@@ -214,7 +207,7 @@ def selec_activities(activ, stg2, stg3, stg4, stg5, stg6, stg_title):
         dir_stg['description'] = None
 
     #pending dinamic ratings
-    dir_stg['rating'] = '4.7'
+    dir_stg['rating'] = '4'
 
     if stg6:    
         dir_stg['tags'] = stg6
