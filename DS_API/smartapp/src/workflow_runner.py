@@ -195,6 +195,9 @@ def selec_activities(activ, stg2, stg3, stg4, stg5, stg6, stg_title):
     else:
         dir_stg['user'] = None
 
+    #pending dinamic dates
+    dir_stg['date'] = '27/10/2010'
+
     if stg5:    
         dir_stg['duration'] = stg5
     else:
@@ -209,6 +212,9 @@ def selec_activities(activ, stg2, stg3, stg4, stg5, stg6, stg_title):
         dir_stg['description'] = stg3
     else:
         dir_stg['description'] = None
+
+    #pending dinamic ratings
+    dir_stg['rating'] = '4.7'
 
     if stg6:    
         dir_stg['tags'] = stg6
@@ -233,14 +239,14 @@ def organize_info(result):
     stg6 = result['tags']
 
     if len(stg5) != len(stg1):
-        #dif_dur = len(stg5)-len(stg1)
-        #for i in range(dif_dur):
-        stg5.append('N/A')
+        dif_dur = len(stg1)-len(stg5)
+        for i in range(dif_dur):
+            stg5.append('N/A')
     
     if len(stg6) != len(stg1):
-        #dif = len(stg6)-len(stg1)
-        #for i in range(dif):
-        stg6.append('general')
+        dif = len(stg1)-len(stg6)
+        for i in range(dif):
+            stg6.append('general')
 
     lis_activ = []
     for j, activ in enumerate(stg1):

@@ -67,6 +67,7 @@ class Cities(BaseModel):
 class Activities(BaseModel):
     title: str
     user : str
+    date: str
     duration: str
     city : str
     description: str
