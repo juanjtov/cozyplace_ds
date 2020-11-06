@@ -1,3 +1,9 @@
+##### START CODE REVIEW COMMENT
+
+# Excellent code!
+
+##### END CODE REVIEW COMMENT
+
 import requests
 from bs4 import BeautifulSoup
 from scraper import get_sections, get_top_destinations, content_info, get_content, get_links_activities
