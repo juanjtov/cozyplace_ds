@@ -33,11 +33,7 @@ You can find [HERE](http://cozyplace-294100.wl.r.appspot.com/docs#/) the documen
 ## LICENSE
 This project has the [MIT](https://choosealicense.com/licenses/mit/) license.
 
-**Table of Contents**
 
-[TOCM]
-
-[TOC]
 
 
                 
