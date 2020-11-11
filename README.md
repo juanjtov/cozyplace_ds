@@ -1,11 +1,11 @@
 ![](https://i.imgur.com/jvR9cyz.png)
 # Cozy Place - Data Science
 
-Platform where you can upload recommendations of places to visit, experiences to carry out, it is considered that we do not have international flights enabled and the destinations are traveling by car.
+Platform where you can upload recommendations of places to visit and experiences to explore. As well as, look for the activities you wanna do in your next vacations.
 
 ## About the API 
-- The goal of this REST API  is to scrape different travel companies and get the most poular acitivties to do in COLOMBIA and MEXICO.
--  The backend make the requests to the API through the end pointsd and the API give a JSON response to it including every detail for each activity.
+- The goal of this REST API  is to scrape different travel companies and get the most popular acitivties to do in COLOMBIA and MEXICO.
+-  The backend make the requests to the API through the end points and the API give a JSON response to it including every detail for each activity.
 
 
 ## Settings
