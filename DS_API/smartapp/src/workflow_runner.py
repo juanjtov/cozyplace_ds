@@ -1,3 +1,9 @@
+##### START CODE REVIEW COMMENT
+
+# You have to explain, in comments too, why the commented code is commented. In another case, delete it
+
+##### END CODE REVIEW COMMENT
+
 from models import  Activities, Configuration, City
 import requests
 from bs4 import BeautifulSoup
